@@ -100,7 +100,7 @@ automatically from your Languages table above - don't duplicate them here. -->
 4. **Verify both documents** (see Verification Checklist below)
 5. Prepare interview talking points based on the role requirements and your strengths
 
-**Important:** When mentioning agentic coding or AI tooling in CVs/cover letters, explicitly reference **Claude Code** by name.
+**Important:** Mention agentic coding or AI tooling in CVs/cover letters only when it is supported by the candidate's actual experience, and name the specific tools they have used. Never infer tool experience from the agent running this workflow.
 
 ## Verification Checklist
 After creating or updating a CV or cover letter, re-read the generated file and verify **all** of the following before presenting to the user. Report the results as a pass/fail checklist.
@@ -126,7 +126,7 @@ After creating or updating a CV or cover letter, re-read the generated file and 
 ### Quality
 - [ ] No LaTeX syntax errors (balanced braces, correct commands)
 - [ ] No spelling or grammar errors
-- [ ] Agentic coding / AI tooling references mention **Claude Code** by name
+- [ ] Agentic coding / AI tooling references are supported by the candidate profile and name only tools the candidate has actually used
 - [ ] Cover letter is addressed to the correct person (or "Dear Hiring Manager" if unknown)
 - [ ] Cover letter fits approximately one page
 - [ ] CV section headings (`\section{...}`) and the References boilerplate line match the CV's language, not left as the English template defaults (see `05-cv-templates.md`)

@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml"><img src="https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml/badge.svg" alt="CI" height="20"></a>
   &nbsp;
-  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/built_on-Claude_Code-2A9D8F?style=flat" alt="Built on Claude Code" height="20"></a>
+  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/Claude_Code_%2B_Copilot-supported-2A9D8F?style=flat" alt="Claude Code and GitHub Copilot supported" height="20"></a>
   &nbsp;
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2A9D8F?style=flat" alt="MIT license" height="20"></a>
 </p>
@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  An AI-powered job application framework built on <a href="https://claude.com/claude-code">Claude Code</a>.<br>
-  Fork it, fill in your profile, and let Claude evaluate job postings, tailor your CV,<br>
+  An AI-powered job application framework with workflows for <a href="https://claude.com/claude-code">Claude Code</a> and <a href="https://github.com/features/copilot">GitHub Copilot</a>.<br>
+  Fork it, fill in your profile, and let your agent evaluate job postings, tailor your CV,<br>
   write cover letters, and prepare you for interviews.
 </p>
 
@@ -62,7 +62,7 @@ Sixty-nine tailored applications, twenty first interviews, and one signed contra
 
 ## What this is
 
-A structured workflow that turns Claude Code into a full-stack job application assistant. Six commands carry you from an empty profile to a tracked result:
+A structured workflow for Claude Code and GitHub Copilot. Six commands carry you from an empty profile to a tracked result:
 
 <p align="center">
   <img src="assets/readme/route.svg" alt="The workflow in order: /setup builds your profile, /scrape finds new postings, /rank shortlists the fits, /apply tailors a CV and cover letter, /interview preps every round, /outcome tracks each result." width="100%">
@@ -80,7 +80,7 @@ The framework encodes career guidance best practices, including structured evalu
 
 | | |
 |---|---|
-| **[Claude Code](https://claude.com/claude-code)** | The CLI. No free tier: a Claude Pro/Max/Team subscription or Anthropic API credits (pay-per-token, usually cheaper for occasional use). |
+| **[Claude Code](https://claude.com/claude-code) or [VS Code + GitHub Copilot](https://github.com/features/copilot)** | Use the workflow commands in Claude Code, or the native Agent Skills in VS Code Copilot Chat. |
 | **Python 3.10+** | For the tools in `tools/`. |
 | **[Bun](https://bun.sh)** | Runs the job search CLI tools. |
 | **LaTeX** | A distribution with `lualatex` and `xelatex`: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/), or [MiKTeX](https://miktex.org/). |
@@ -89,7 +89,7 @@ The framework encodes career guidance best practices, including structured evalu
 <details>
 <summary>Fine print: other agents, LaTeX engines, PDF text extraction</summary>
 
-- **Using a different agent tool** (Codex, Antigravity, Gemini CLI)? Start at [`AGENTS.md`](AGENTS.md) - the portal search skills work there out of the box, and [community forks](https://github.com/ai-job-search-dev/ai-job-search/discussions/78) adapt the full workflow.
+- **Using VS Code Copilot?** Open the repository in VS Code, select the Copilot harness in Chat, then run `/setup`; workspace skills live in `.github/skills/`. For Codex, Antigravity, Gemini CLI, or another agent, start at [`AGENTS.md`](AGENTS.md) - canonical workflows remain under `.claude/` and portal CLIs under `.agents/skills/`.
 - **LaTeX engines.** The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors); the cover letter compiles with `xelatex` because `cover.cls` requires `fontspec`. If using a minimal TeX install such as TinyTeX or BasicTeX, install the extra packages listed in [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex).
 - **PDF text extraction.** `pypdf` is BSD-licensed and needs no Poppler. Poppler `pdftotext` remains a fallback (macOS: `brew install poppler`, Debian/Ubuntu: `apt install poppler-utils`, Windows: `choco install poppler`). If both are missing, the check degrades to a visual keyword review.
 
@@ -138,11 +138,15 @@ For `linkedin-search` and `freehire-search` the install is optional: both have z
 
 ### 3. Set up your profile
 
+With Claude Code:
+
 ```bash
 claude
 # Then inside Claude Code:
 /setup
 ```
+
+With VS Code Copilot Chat, open the repository, select the Copilot agent, and run `/setup`.
 
 `/setup` offers three paths: read your `documents/` folder if you have one populated (CV PDF, LinkedIn export, diplomas, reference letters, past applications), import a single CV pasted in chat, or walk through an interview. It auto-detects what you have and asks. Documents-folder mode is idempotent and safe to re-run as you add more material; see `documents/README.md` for the layout.
 
@@ -219,9 +223,9 @@ The `/apply` command runs a **drafter-reviewer workflow** with mandatory PDF com
 1. **Parse** the job posting (URL or text)
 2. **Evaluate fit** against your profile (skills, experience, culture, location, career alignment)
 3. **Draft** a tailored CV and cover letter in LaTeX
-4. **Spawn a reviewer agent** that researches the company and critiques the drafts
+4. **Review the drafts** with a separate reviewer agent when available; otherwise perform and identify a separate self-review
 5. **Revise** based on the reviewer's feedback
-6. **Compile and inspect** both PDFs: lualatex for the CV, xelatex for the cover letter. Claude reads the rendered pages and iterates on the LaTeX until the CV is exactly 2 pages with no orphaned entry titles, and the cover letter is exactly 1 page with the signature visible and fonts consistent.
+6. **Compile and inspect** both PDFs: lualatex for the CV, xelatex for the cover letter. The active agent reads the rendered pages and iterates on the LaTeX until the CV is exactly 2 pages with no orphaned entry titles, and the cover letter is exactly 1 page with the signature visible and fonts consistent.
 7. **ATS-check the CV**: extract the PDF's text layer (`pdftotext`, optional dependency) and verify it the way an ATS parser sees it — contact details present as literal text, no garbled glyphs, sane reading order — then score the posting's keyword coverage against the extraction. Keywords the profile genuinely supports get added; genuine gaps stay visible, never stuffed.
 8. **Present** the final output with a verification checklist
 
@@ -233,7 +237,7 @@ All claims in the CV and cover letter are verified against your actual profile. 
 - **PDF verification loop.** Most LaTeX-resume templates produce "looks fine in the .tex" output that breaks in the PDF: job titles orphan to the next page, cover letters spill onto page 2, bullet fonts silently fall back to the body font. The `/apply` command compiles and visually inspects every PDF and applies targeted fixes (`\needspace`, `\enlargethispage`, font-matching wrappers for list items) until the layout is clean. This runs automatically on every application.
 - **ATS verification on the PDF text layer.** An ATS reads the PDF's embedded text, not the rendered page — and LaTeX can silently produce PDFs whose text extracts as garbage (icon glyphs where the email should be, interleaved lines from multi-column layouts). `/apply` extracts the compiled CV's text layer with `pdftotext` and verifies contact details, reading order, and the posting's keyword coverage against what a parser actually sees. Honesty rule enforced: a keyword the profile doesn't support is acknowledged as a gap, never stuffed in.
 - **Relevance-weighted CV cutting.** When a CV overflows 2 pages, the workflow does not cut mechanically from the "oldest" section. It scores each candidate line by (a) relevance to the target posting, (b) uniqueness in the document, and (c) whether the cover letter depends on it, and cuts the lowest-total-score line first. An older-role bullet that hits posting keywords survives ahead of a recent-role bullet that does not.
-- **Drafter-reviewer separation.** The drafter writes; a second Claude agent, spawned with a fresh context, researches the company and critiques the drafts. The drafter then revises. This catches missed keywords, weak framing, and generic language that a single pass often leaves in.
+- **Drafter-reviewer separation.** A second reviewer agent researches the company and critiques the drafts when the selected tool supports it. In Copilot sessions without an independent reviewer, the workflow discloses and performs a separate self-review instead.
 - **Token-efficient reviewer dispatch.** The reviewer agent receives drafts inline rather than re-reading them, and the verification checklist runs once at the end of the workflow rather than being duplicated by both agents. Note: the new compile-and-inspect step in Step 5 spends some of those savings on PDF rendering and layout iteration — the workflow trades some end-to-end token cost for a real reduction in broken PDFs reaching the user.
 
 </details>
